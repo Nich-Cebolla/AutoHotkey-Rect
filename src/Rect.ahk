@@ -875,26 +875,26 @@ class WinRect extends Rect {
     Call(*) {
         switch this.Flag, 0 {
             case 0:
-                if !DllCall(g_user32_GetWindowRect, 'ptr', this.Hwnd, 'ptr', this.Ptr + this.Offset, 'int') {
+                if !DllCall(g_user32_GetWindowRect, 'ptr', this.Hwnd, 'ptr', this.Ptr, 'int') {
                     throw OSError()
                 }
             case 1:
-                if !DllCall(g_user32_GetClientRect, 'ptr', this.Hwnd, 'ptr', this.Ptr + this.Offset, 'int') {
+                if !DllCall(g_user32_GetClientRect, 'ptr', this.Hwnd, 'ptr', this.Ptr, 'int') {
                     throw OSError()
                 }
             case 2:
-                if HRESULT := DllCall(g_dwmapi_DwmGetWindowAttribute, 'ptr', this.Hwnd, 'uint', 9, 'ptr', this.Ptr + this.Offset, 'uint', 16, 'uint') {
+                if HRESULT := DllCall(g_dwmapi_DwmGetWindowAttribute, 'ptr', this.Hwnd, 'uint', 9, 'ptr', this.Ptr, 'uint', 16, 'uint') {
                     throw OSError('``DwmGetWindowAttribute`` failed.', , 'HRESULT: ' Format('{:X}', HRESULT))
                 }
             case 3:
                 hwndParent := DllCall(g_user32_GetParent, 'ptr', this.Hwnd, 'ptr') || this.Hwnd
-                if !DllCall(g_user32_GetWindowRect, 'ptr', this.Hwnd, 'ptr', this.Ptr + this.Offset, 'int') {
+                if !DllCall(g_user32_GetWindowRect, 'ptr', this.Hwnd, 'ptr', this.Ptr, 'int') {
                     throw OSError()
                 }
-                if !DllCall(g_user32_ScreenToClient, 'ptr', hwndParent, 'ptr', this.Ptr + this.Offset, 'int') {
+                if !DllCall(g_user32_ScreenToClient, 'ptr', hwndParent, 'ptr', this.Ptr, 'int') {
                     throw OSError()
                 }
-                if !DllCall(g_user32_ScreenToClient, 'ptr', hwndParent, 'ptr', this.Ptr + this.Offset + 8, 'int') {
+                if !DllCall(g_user32_ScreenToClient, 'ptr', hwndParent, 'ptr', this.Ptr + 8, 'int') {
                     throw OSError()
                 }
         }
