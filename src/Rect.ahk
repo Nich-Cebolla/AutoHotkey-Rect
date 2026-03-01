@@ -937,7 +937,7 @@ Rect_Clone(Self) {
     obj.Buffer := Buffer(Self.Size)
     ObjSetBase(obj, %Self.__Class%.Prototype)
     DllCall(
-        g_msvcrt_memmove
+        g_msvcrt_memcpy
       , 'ptr', obj.Ptr
       , 'ptr', Self.Ptr
       , 'int', Self.Size
@@ -1007,7 +1007,7 @@ Rect_SetConstants(force := false) {
     hmod := DllCall('LoadLibrary', 'str', 'Dwmapi', 'ptr')
     g_dwmapi_DwmGetWindowAttribute := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'DwmGetWindowAttribute', 'ptr')
     hmod := DllCall('LoadLibrary', 'str', 'msvcrt', 'ptr')
-    g_msvcrt_memmove := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'memmove', 'ptr')
+    g_msvcrt_memcpy := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'memcpy', 'ptr')
 
     Rect_constants_set := true
 }
