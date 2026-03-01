@@ -67,17 +67,6 @@ class Point {
         ; this is overridden
     }
     /**
-     * @description - Calls {@link https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos}
-     * then returns a string in the format "(X, Y)" using {@link https://www.autohotkey.com/docs/v2/lib/Format.htm Format}
-     * to add additional space characters to standadize the character length of both values.
-     * @param {Integer} [Digits = 1] - The number of digits
-     * @returns {String}
-     */
-    CursorPosToString(Digits := 1) {
-        DllCall(g_user32_GetCursorPos, 'ptr', this, 'int')
-        return Format('({:' Digits '}, {:' Digits '})', this.X, this.Y)
-    }
-    /**
      * @description - Calls {@link https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos}.
      * @returns {Boolean} - True if successful.
      */
@@ -432,21 +421,6 @@ class Rect {
             throw OSError()
         }
         return rc
-    }
-    ToString(DimensionLen := '-6') {
-        return (
-            'TL: ' Format('( {}, {} )', this.L, this.T)
-            '`r`nBR: ' Format('( {}, {} )', this.R, this.B)
-            '`r`nW: ' Format('{:' DimensionLen '}', this.W) '  H: ' Format('{:' DimensionLen '}', this.H)
-        )
-    }
-    ToStringDeconstructed(DimensionLen := '-6') {
-        return {
-            TL: Format('( {}, {} )', this.L, this.T)
-          , BR: Format('( {}, {} )', this.R, this.B)
-          , W: Format('{:' DimensionLen '}', this.W)
-          , H: Format('{:' DimensionLen '}', this.H)
-        }
     }
     Union(rc) {
         out := Rect()
