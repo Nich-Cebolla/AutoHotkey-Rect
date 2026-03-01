@@ -11,7 +11,7 @@ class Point {
      * @returns {Point}
      */
     static FromCaret() {
-        pt := Point()
+        pt := this()
         DllCall(g_user32_GetCaretPos, 'ptr', pt, 'int')
         return pt
     }
@@ -21,7 +21,7 @@ class Point {
      * @returns {Point}
      */
     static FromCursor() {
-        pt := Point()
+        pt := this()
         DllCall(g_user32_GetCursorPos, 'ptr', pt, 'int')
         return pt
     }
