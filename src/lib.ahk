@@ -437,21 +437,6 @@ Window32CallbackFromDesktop(*) {
 Window32CallbackFromForeground(*) {
     return DllCall(g_user32_GetForegroundWindow, 'ptr')
 }
-/**
- * @description - To use this as a callback with `Window32.Prototype.SetCallback`, you must
- * define it as a `BoundFunc` defining the "Cmd" value.
- * @example
- *  hwnd := DllCall(g_user32_GetDesktopWindow, 'ptr')
- *  win := Window32(hwnd)
- *  win.SetCallback(Window32CallbackFromNext.Bind(3))
- *  win()
- * @
- */
-Window32CallbackFromNext(Cmd, win) {
-    if hwnd := DllCall(g_user32_GetNextWindow, 'ptr', win.Hwnd, 'uint', Cmd, 'ptr') {
-        return hwnd
-    }
-}
 Window32CallbackFromParent(win) {
     if hwnd := DllCall(g_user32_GetParent, 'ptr', win.Hwnd, 'ptr') {
         return hwnd

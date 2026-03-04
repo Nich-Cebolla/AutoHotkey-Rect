@@ -489,15 +489,6 @@ class Window32 {
         }
         return this(DllCall(g_user32_WindowFromPoint, 'int', pt.Value, 'ptr'))
     }
-    /**
-     * @description - Calls {@link https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getnextwindow GetNextWindow}.
-     * @param {Integer} Hwnd - A handle to a window. The window handle retrieved is relative to this
-     * window, based on the value of the `Cmd` parameter.
-     * @param {Integer} Cmd -
-     * - 2 : Returns a handle to the window below the given window.
-     * - 3 : Returns a handle to the window above the given window.
-     */
-    static FromNext(Hwnd, Cmd) => this(DllCall(g_user32_GetNextWindow, 'ptr', Hwnd, 'uint', Cmd, 'ptr'))
     static FromParent(Hwnd) => this(DllCall(g_user32_GetParent, 'ptr', Hwnd, 'ptr'))
     static FromPoint(X, Y) => this(DllCall(g_user32_WindowFromPoint, 'int', (X & 0xFFFFFFFF) | (Y << 32), 'ptr'))
     static FromShell() => this(DllCall(g_user32_GetShellWindow, 'ptr'))
@@ -825,11 +816,12 @@ class Window32 {
 class WinRect extends Rect {
     /**
      * @param {Integer} [Hwnd = 0] - The window handle.
-     * @param {Integer} [Flag = 0] - A flag that determines what function is called when the
-     * buffer's values are updated using `WinRectGetPos` or `WinRectUpdate`.
+     * @param {Integer} [Flag = 0] - A flag that determines what function is called when
+     * measuring the window's dimensions.
      * - 0 : `GetWindowRect`
      * - 1 : `GetClientRect`
      * - 2 : `DwmGetWindowAttribute` passing DWMWA_EXTENDED_FRAME_BOUNDS to dwAttribute.
+     *   See {@link https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmgetwindowattribute}.
      * - 3 : `GetWindowRect` is called, then `ScreenToClient` is called for both coordinates using
      *   the parent window's client area for the conversion. If `Hwnd` is a control's window handle,
      *   this would be the same as calling
@@ -958,7 +950,6 @@ Rect_SetConstants(force := false) {
     g_user32_MonitorFromPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'MonitorFromPoint', 'ptr')
     g_user32_MonitorFromRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'MonitorFromRect', 'ptr')
     g_user32_MonitorFromWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'MonitorFromWindow', 'ptr')
-    g_user32_GetNextWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetNextWindow', 'ptr')
     g_user32_OffsetRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'OffsetRect', 'ptr')
     g_user32_PhysicalToLogicalPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'PhysicalToLogicalPoint', 'ptr')
     g_user32_PhysicalToLogicalPointForPerMonitorDPI := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'PhysicalToLogicalPointForPerMonitorDPI', 'ptr')
