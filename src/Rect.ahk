@@ -594,14 +594,16 @@ class Window32 {
         }
     }
     GetChildBoundingRect() {
-        rects := [Rect(), Rect(), Rect()]
-        cb := CallbackCreate(_EnumChildWindowsProc, 'fast',  1)
-        DllCall(g_user32_EnumChildWindows, 'ptr', this.Hwnd, 'ptr', cb, 'ptr', 0, 'int')
+        rects := [WinRect(, 3), WinRect(, 3), WinRect(, 3)]
+        cb := CallbackCreate(_EnumChildWindowsProc, 'fast')
+        DllCall(g_user32_EnumChildWindows, 'ptr', this.hwnd, 'ptr', cb, 'ptr', ObjPtr(rects), 'int')
         CallbackFree(cb)
         return rects[1]
 
-        _EnumChildWindowsProc(hwnd) {
-            DllCall(g_user32_GetWindowRect, 'ptr', Hwnd, 'ptr', rects[3], 'int')
+        _EnumChildWindowsProc(hwnd, lparam) {
+            rects := ObjFromPtrAddRef(lparam)
+            rects[3].hwnd := hwnd
+            rects[3]()
             DllCall(g_user32_UnionRect, 'ptr', rects[2], 'ptr', rects[3], 'ptr', rects[1], 'int')
             rects.Push(rects.RemoveAt(1))
             return 1
