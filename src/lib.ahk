@@ -463,7 +463,7 @@ Window32ChildFromPointEx(win, X, Y, Flag := 0) {
 }
 Window32EnumChildWindows(win, Callback, lParam := 0) {
     cb := CallbackCreate(Callback, 'fast', 1)
-    result := DllCall(g_user32_EnumChildWindows, 'ptr', IsObject(win) ? win.Hwnd : win, 'ptr', cb, 'uint', lParam, 'int')
+    result := DllCall(g_user32_EnumChildWindows, 'ptr', IsObject(win) ? win.Hwnd : win, 'ptr', cb, 'ptr', lParam, 'int')
     CallbackFree(cb)
     return result
 }
@@ -476,7 +476,7 @@ Window32EnumChildWindows(win, Callback, lParam := 0) {
 Window32GetChildBoundingRect(win) {
     rects := [Rect(), Rect(), Rect()]
     cb := CallbackCreate(_EnumChildWindowsProc, 'fast',  1)
-    DllCall(g_user32_EnumChildWindows, 'ptr', IsObject(win) ? win.Hwnd : win, 'ptr', cb, 'int', 0, 'int')
+    DllCall(g_user32_EnumChildWindows, 'ptr', IsObject(win) ? win.Hwnd : win, 'ptr', cb, 'ptr', 0, 'int')
     CallbackFree(cb)
     return rects[1]
 
