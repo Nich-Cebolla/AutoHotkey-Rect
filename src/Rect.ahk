@@ -187,6 +187,11 @@ class Rect {
         rc.B := rc.T
         return rc
     }
+    static FromPtr(ptr) {
+        rc := { buffer: { ptr: ptr, size: 16 } }
+        rc.base := this.Prototype
+        return rc
+    }
     /**
      * @description - Creates a new {@link Rect} object.
      * @param {Integer} [L] - The left coordinate.
