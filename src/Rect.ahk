@@ -442,7 +442,7 @@ class Rect {
     BR => Point(NumGet(this, 8, 'int'), NumGet(this, 12, 'int'))
     Dpi {
         Get {
-            if DllCall(g_shcore_GetDpiForMonitor, 'ptr', DllCall(g_shcore_MonitorFromRect, 'ptr', this, 'uint', 0, 'ptr'), 'uint', 0, 'uint*', &DpiX := 0, 'uint*', &DpiY := 0, 'int') {
+            if DllCall(g_shcore_GetDpiForMonitor, 'ptr', DllCall(g_user32_MonitorFromRect, 'ptr', this, 'uint', 0, 'ptr'), 'uint', 0, 'uint*', &DpiX := 0, 'uint*', &DpiY := 0, 'int') {
                 throw OSError('``MonitorFomPoint`` received an invalid parameter.')
             } else {
                 return DpiX
@@ -938,65 +938,282 @@ Rect_Clone(Self) {
 
 Rect_SetConstants(force := false) {
     global
-    if IsSet(Rect_constants_set) && !force {
-        return
+    if IsSet(Rect_constants_set) {
+        if !force {
+            return
+        }
+    } else {
+        if !IsSet(g_dwmapi_DwmGetWindowAttribute) {
+            g_dwmapi_DwmGetWindowAttribute := 0
+        }
+        if !IsSet(g_msvcrt_memmove) {
+            g_msvcrt_memmove := 0
+        }
+        if !IsSet(g_shcore_GetDpiForMonitor) {
+            g_shcore_GetDpiForMonitor := 0
+        }
+        if !IsSet(g_user32_AdjustWindowRectEx) {
+            g_user32_AdjustWindowRectEx := 0
+        }
+        if !IsSet(g_user32_BringWindowToTop) {
+            g_user32_BringWindowToTop := 0
+        }
+        if !IsSet(g_user32_ChildWindowFromPoint) {
+            g_user32_ChildWindowFromPoint := 0
+        }
+        if !IsSet(g_user32_ChildWindowFromPointEx) {
+            g_user32_ChildWindowFromPointEx := 0
+        }
+        if !IsSet(g_user32_ClientToScreen) {
+            g_user32_ClientToScreen := 0
+        }
+        if !IsSet(g_user32_EnumChildWindows) {
+            g_user32_EnumChildWindows := 0
+        }
+        if !IsSet(g_user32_EqualRect) {
+            g_user32_EqualRect := 0
+        }
+        if !IsSet(g_user32_GetCaretPos) {
+            g_user32_GetCaretPos := 0
+        }
+        if !IsSet(g_user32_GetClientRect) {
+            g_user32_GetClientRect := 0
+        }
+        if !IsSet(g_user32_GetCursorPos) {
+            g_user32_GetCursorPos := 0
+        }
+        if !IsSet(g_user32_GetDesktopWindow) {
+            g_user32_GetDesktopWindow := 0
+        }
+        if !IsSet(g_user32_GetDpiForWindow) {
+            g_user32_GetDpiForWindow := 0
+        }
+        if !IsSet(g_user32_GetForegroundWindow) {
+            g_user32_GetForegroundWindow := 0
+        }
+        if !IsSet(g_user32_GetMenu) {
+            g_user32_GetMenu := 0
+        }
+        if !IsSet(g_user32_GetParent) {
+            g_user32_GetParent := 0
+        }
+        if !IsSet(g_user32_GetShellWindow) {
+            g_user32_GetShellWindow := 0
+        }
+        if !IsSet(g_user32_GetTopWindow) {
+            g_user32_GetTopWindow := 0
+        }
+        if !IsSet(g_user32_GetWindow) {
+            g_user32_GetWindow := 0
+        }
+        if !IsSet(g_user32_GetWindowInfo) {
+            g_user32_GetWindowInfo := 0
+        }
+        if !IsSet(g_user32_GetWindowRect) {
+            g_user32_GetWindowRect := 0
+        }
+        if !IsSet(g_user32_InflateRect) {
+            g_user32_InflateRect := 0
+        }
+        if !IsSet(g_user32_IntersectRect) {
+            g_user32_IntersectRect := 0
+        }
+        if !IsSet(g_user32_IsChild) {
+            g_user32_IsChild := 0
+        }
+        if !IsSet(g_user32_IsRectEmpty) {
+            g_user32_IsRectEmpty := 0
+        }
+        if !IsSet(g_user32_IsWindowVisible) {
+            g_user32_IsWindowVisible := 0
+        }
+        if !IsSet(g_user32_LogicalToPhysicalPoint) {
+            g_user32_LogicalToPhysicalPoint := 0
+        }
+        if !IsSet(g_user32_LogicalToPhysicalPointForPerMonitorDPI) {
+            g_user32_LogicalToPhysicalPointForPerMonitorDPI := 0
+        }
+        if !IsSet(g_user32_MapWindowPoints) {
+            g_user32_MapWindowPoints := 0
+        }
+        if !IsSet(g_user32_MonitorFromPoint) {
+            g_user32_MonitorFromPoint := 0
+        }
+        if !IsSet(g_user32_MonitorFromRect) {
+            g_user32_MonitorFromRect := 0
+        }
+        if !IsSet(g_user32_MonitorFromWindow) {
+            g_user32_MonitorFromWindow := 0
+        }
+        if !IsSet(g_user32_OffsetRect) {
+            g_user32_OffsetRect := 0
+        }
+        if !IsSet(g_user32_PhysicalToLogicalPoint) {
+            g_user32_PhysicalToLogicalPoint := 0
+        }
+        if !IsSet(g_user32_PhysicalToLogicalPointForPerMonitorDPI) {
+            g_user32_PhysicalToLogicalPointForPerMonitorDPI := 0
+        }
+        if !IsSet(g_user32_PtInRect) {
+            g_user32_PtInRect := 0
+        }
+        if !IsSet(g_user32_RealChildWindowFromPoint) {
+            g_user32_RealChildWindowFromPoint := 0
+        }
+        if !IsSet(g_user32_ScreenToClient) {
+            g_user32_ScreenToClient := 0
+        }
+        if !IsSet(g_user32_SetActiveWindow) {
+            g_user32_SetActiveWindow := 0
+        }
+        if !IsSet(g_user32_SetCaretPos) {
+            g_user32_SetCaretPos := 0
+        }
+        if !IsSet(g_user32_SetForegroundWindow) {
+            g_user32_SetForegroundWindow := 0
+        }
+        if !IsSet(g_user32_SetParent) {
+            g_user32_SetParent := 0
+        }
+        if !IsSet(g_user32_SetThreadDpiAwarenessContext) {
+            g_user32_SetThreadDpiAwarenessContext := 0
+        }
+        if !IsSet(g_user32_SetWindowPos) {
+            g_user32_SetWindowPos := 0
+        }
+        if !IsSet(g_user32_ShowWindow) {
+            g_user32_ShowWindow := 0
+        }
+        if !IsSet(g_user32_SubtractRect) {
+            g_user32_SubtractRect := 0
+        }
+        if !IsSet(g_user32_UnionRect) {
+            g_user32_UnionRect := 0
+        }
+        if !IsSet(g_user32_WindowFromPoint) {
+            g_user32_WindowFromPoint := 0
+        }
     }
 
-    local hmod := DllCall('GetModuleHandle', 'str', 'User32', 'ptr')
-    g_user32_AdjustWindowRectEx := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'AdjustWindowRectEx', 'ptr')
-    g_user32_BringWindowToTop := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'BringWindowToTop', 'ptr')
-    g_user32_ChildWindowFromPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'ChildWindowFromPoint', 'ptr')
-    g_user32_ChildWindowFromPointEx := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'ChildWindowFromPointEx', 'ptr')
-    g_user32_ClientToScreen := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'ClientToScreen', 'ptr')
-    g_user32_EnumChildWindows := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'EnumChildWindows', 'ptr')
-    g_user32_EqualRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'EqualRect', 'ptr')
-    g_user32_GetCaretPos := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetCaretPos', 'ptr')
-    g_user32_GetClientRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetClientRect', 'ptr')
-    g_user32_GetCursorPos := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetCursorPos', 'ptr')
-    g_user32_GetDesktopWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetDesktopWindow', 'ptr')
-    g_user32_GetDpiForWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetDpiForWindow', 'ptr')
-    g_user32_GetForegroundWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetForegroundWindow', 'ptr')
-    g_user32_GetMenu := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetMenu', 'ptr')
-    g_user32_GetParent := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetParent', 'ptr')
-    g_user32_GetShellWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetShellWindow', 'ptr')
-    g_user32_GetTopWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetTopWindow', 'ptr')
-    g_user32_GetWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetWindow', 'ptr')
-    g_user32_GetWindowInfo := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetWindowInfo', 'ptr')
-    g_user32_GetWindowRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetWindowRect', 'ptr')
-    g_user32_InflateRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'InflateRect', 'ptr')
-    g_user32_IntersectRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'IntersectRect', 'ptr')
-    g_user32_IsChild := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'IsChild', 'ptr')
-    g_user32_IsRectEmpty := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'IsRectEmpty', 'ptr')
-    g_user32_IsWindowVisible := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'IsWindowVisible', 'ptr')
-    g_user32_LogicalToPhysicalPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'LogicalToPhysicalPoint', 'ptr')
-    g_user32_LogicalToPhysicalPointForPerMonitorDPI := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'LogicalToPhysicalPointForPerMonitorDPI', 'ptr')
-    g_user32_MapWindowPoints := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'MapWindowPoints', 'ptr')
-    g_user32_MonitorFromPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'MonitorFromPoint', 'ptr')
-    g_user32_MonitorFromRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'MonitorFromRect', 'ptr')
-    g_user32_MonitorFromWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'MonitorFromWindow', 'ptr')
-    g_user32_OffsetRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'OffsetRect', 'ptr')
-    g_user32_PhysicalToLogicalPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'PhysicalToLogicalPoint', 'ptr')
-    g_user32_PhysicalToLogicalPointForPerMonitorDPI := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'PhysicalToLogicalPointForPerMonitorDPI', 'ptr')
-    g_user32_PtInRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'PtInRect', 'ptr')
-    g_user32_RealChildWindowFromPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'RealChildWindowFromPoint', 'ptr')
-    g_user32_ScreenToClient := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'ScreenToClient', 'ptr')
-    g_user32_SetActiveWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetActiveWindow', 'ptr')
-    g_user32_SetCaretPos := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetCaretPos', 'ptr')
-    g_user32_SetForegroundWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetForegroundWindow', 'ptr')
-    g_user32_SetParent := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetParent', 'ptr')
-    g_user32_SetThreadDpiAwarenessContext := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetThreadDpiAwarenessContext', 'ptr')
-    g_user32_SetWindowPos := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetWindowPos', 'ptr')
-    g_user32_ShowWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'ShowWindow', 'ptr')
-    g_user32_SubtractRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SubtractRect', 'ptr')
-    g_user32_UnionRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'UnionRect', 'ptr')
-    g_user32_WindowFromPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'WindowFromPoint', 'ptr')
-    hmod := DllCall('LoadLibrary', 'str', 'Shcore', 'ptr')
-    g_shcore_GetDpiForMonitor := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetDpiForMonitor', 'ptr')
-    g_shcore_MonitorFromRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'MonitorFromRect', 'ptr')
-    hmod := DllCall('LoadLibrary', 'str', 'Dwmapi', 'ptr')
-    g_dwmapi_DwmGetWindowAttribute := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'DwmGetWindowAttribute', 'ptr')
-    hmod := DllCall('LoadLibrary', 'str', 'msvcrt', 'ptr')
-    g_msvcrt_memcpy := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'memcpy', 'ptr')
+    ; https://github.com/Nich-Cebolla/AutoHotkey-LibV2/blob/main/LibraryManager.ahk
+    if IsSet(LibraryManager) {
+        Rect_LibraryToken := LibraryManager(
+            'dwmapi', [
+                'DwmGetWindowAttribute'
+            ],
+            'msvcrt', [
+                'memmove'
+            ],
+            'shcore', [
+                'GetDpiForMonitor'
+            ],
+            'user32', [
+                'AdjustWindowRectEx',
+                'BringWindowToTop',
+                'ChildWindowFromPoint',
+                'ChildWindowFromPointEx',
+                'ClientToScreen',
+                'EnumChildWindows',
+                'EqualRect',
+                'GetCaretPos',
+                'GetClientRect',
+                'GetCursorPos',
+                'GetDesktopWindow',
+                'GetDpiForWindow',
+                'GetForegroundWindow',
+                'GetMenu',
+                'GetParent',
+                'GetShellWindow',
+                'GetTopWindow',
+                'GetWindow',
+                'GetWindowInfo',
+                'GetWindowRect',
+                'InflateRect',
+                'IntersectRect',
+                'IsChild',
+                'IsRectEmpty',
+                'IsWindowVisible',
+                'LogicalToPhysicalPoint',
+                'LogicalToPhysicalPointForPerMonitorDPI',
+                'MapWindowPoints',
+                'MonitorFromPoint',
+                'MonitorFromRect',
+                'MonitorFromWindow',
+                'OffsetRect',
+                'PhysicalToLogicalPoint',
+                'PhysicalToLogicalPointForPerMonitorDPI',
+                'PtInRect',
+                'RealChildWindowFromPoint',
+                'ScreenToClient',
+                'SetActiveWindow',
+                'SetCaretPos',
+                'SetForegroundWindow',
+                'SetParent',
+                'SetThreadDpiAwarenessContext',
+                'SetWindowPos',
+                'ShowWindow',
+                'SubtractRect',
+                'UnionRect',
+                'WindowFromPoint'
+            ]
+        )
+    } else {
+        local hmod := DllCall('LoadLibrary', 'str', 'Dwmapi', 'ptr')
+        g_dwmapi_DwmGetWindowAttribute := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'DwmGetWindowAttribute', 'ptr')
+        hmod := DllCall('LoadLibrary', 'str', 'msvcrt', 'ptr')
+        g_msvcrt_memmove := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'memmove', 'ptr')
+        hmod := DllCall('LoadLibrary', 'str', 'Shcore', 'ptr')
+        g_shcore_GetDpiForMonitor := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetDpiForMonitor', 'ptr')
+        hmod := DllCall('GetModuleHandle', 'str', 'User32', 'ptr')
+        g_user32_AdjustWindowRectEx := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'AdjustWindowRectEx', 'ptr')
+        g_user32_BringWindowToTop := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'BringWindowToTop', 'ptr')
+        g_user32_ChildWindowFromPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'ChildWindowFromPoint', 'ptr')
+        g_user32_ChildWindowFromPointEx := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'ChildWindowFromPointEx', 'ptr')
+        g_user32_ClientToScreen := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'ClientToScreen', 'ptr')
+        g_user32_EnumChildWindows := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'EnumChildWindows', 'ptr')
+        g_user32_EqualRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'EqualRect', 'ptr')
+        g_user32_GetCaretPos := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetCaretPos', 'ptr')
+        g_user32_GetClientRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetClientRect', 'ptr')
+        g_user32_GetCursorPos := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetCursorPos', 'ptr')
+        g_user32_GetDesktopWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetDesktopWindow', 'ptr')
+        g_user32_GetDpiForWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetDpiForWindow', 'ptr')
+        g_user32_GetForegroundWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetForegroundWindow', 'ptr')
+        g_user32_GetMenu := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetMenu', 'ptr')
+        g_user32_GetParent := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetParent', 'ptr')
+        g_user32_GetShellWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetShellWindow', 'ptr')
+        g_user32_GetTopWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetTopWindow', 'ptr')
+        g_user32_GetWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetWindow', 'ptr')
+        g_user32_GetWindowInfo := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetWindowInfo', 'ptr')
+        g_user32_GetWindowRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetWindowRect', 'ptr')
+        g_user32_InflateRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'InflateRect', 'ptr')
+        g_user32_IntersectRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'IntersectRect', 'ptr')
+        g_user32_IsChild := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'IsChild', 'ptr')
+        g_user32_IsRectEmpty := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'IsRectEmpty', 'ptr')
+        g_user32_IsWindowVisible := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'IsWindowVisible', 'ptr')
+        g_user32_LogicalToPhysicalPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'LogicalToPhysicalPoint', 'ptr')
+        g_user32_LogicalToPhysicalPointForPerMonitorDPI := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'LogicalToPhysicalPointForPerMonitorDPI', 'ptr')
+        g_user32_MapWindowPoints := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'MapWindowPoints', 'ptr')
+        g_user32_MonitorFromPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'MonitorFromPoint', 'ptr')
+        g_user32_MonitorFromRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'MonitorFromRect', 'ptr')
+        g_user32_MonitorFromWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'MonitorFromWindow', 'ptr')
+        g_user32_OffsetRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'OffsetRect', 'ptr')
+        g_user32_PhysicalToLogicalPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'PhysicalToLogicalPoint', 'ptr')
+        g_user32_PhysicalToLogicalPointForPerMonitorDPI := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'PhysicalToLogicalPointForPerMonitorDPI', 'ptr')
+        g_user32_PtInRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'PtInRect', 'ptr')
+        g_user32_RealChildWindowFromPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'RealChildWindowFromPoint', 'ptr')
+        g_user32_ScreenToClient := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'ScreenToClient', 'ptr')
+        g_user32_SetActiveWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetActiveWindow', 'ptr')
+        g_user32_SetCaretPos := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetCaretPos', 'ptr')
+        g_user32_SetForegroundWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetForegroundWindow', 'ptr')
+        g_user32_SetParent := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetParent', 'ptr')
+        g_user32_SetThreadDpiAwarenessContext := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetThreadDpiAwarenessContext', 'ptr')
+        g_user32_SetWindowPos := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetWindowPos', 'ptr')
+        g_user32_ShowWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'ShowWindow', 'ptr')
+        g_user32_SubtractRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SubtractRect', 'ptr')
+        g_user32_UnionRect := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'UnionRect', 'ptr')
+        g_user32_WindowFromPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'WindowFromPoint', 'ptr')
+    }
+
 
     Rect_constants_set := true
 }
