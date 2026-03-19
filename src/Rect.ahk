@@ -927,7 +927,7 @@ Rect_Clone(Self) {
     obj.Buffer := Buffer(Self.Size)
     ObjSetBase(obj, %Self.__Class%.Prototype)
     DllCall(
-        g_msvcrt_memcpy
+        g_msvcrt_memmove
       , 'ptr', obj.Ptr
       , 'ptr', Self.Ptr
       , 'int', Self.Size
