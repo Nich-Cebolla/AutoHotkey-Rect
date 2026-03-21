@@ -132,6 +132,16 @@ class Point {
     SetCaretPos() {
         return DllCall(g_user32_SetCaretPos, 'int', this.X, 'int', this.Y, 'int')
     }
+    /**
+     * @desc - Calls
+     * {@link https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursorpos SetCursorPos}
+     * using this object's {@link Point#x} and {@link Point#y} values.
+     */
+    SetCursorPos() {
+        if !DllCall(g_user32_SetCursorPos, 'int', this.x, 'int', this.y, 'int') {
+            throw OSError()
+        }
+    }
 
     /**
      * @returns {Integer} - The dpi of the monitor containing the point.
@@ -1069,6 +1079,9 @@ Rect_SetConstants(force := false) {
         if !IsSet(g_user32_SetCaretPos) {
             g_user32_SetCaretPos := 0
         }
+        if !IsSet(g_user32_SetCursorPos) {
+            g_user32_SetCursorPos := 0
+        }
         if !IsSet(g_user32_SetForegroundWindow) {
             g_user32_SetForegroundWindow := 0
         }
@@ -1147,6 +1160,7 @@ Rect_SetConstants(force := false) {
                 'ScreenToClient',
                 'SetActiveWindow',
                 'SetCaretPos',
+                'SetCursorPos',
                 'SetForegroundWindow',
                 'SetParent',
                 'SetThreadDpiAwarenessContext',
@@ -1204,6 +1218,7 @@ Rect_SetConstants(force := false) {
         g_user32_ScreenToClient := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'ScreenToClient', 'ptr')
         g_user32_SetActiveWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetActiveWindow', 'ptr')
         g_user32_SetCaretPos := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetCaretPos', 'ptr')
+        g_user32_SetCursorPos := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetCursorPos', 'ptr')
         g_user32_SetForegroundWindow := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetForegroundWindow', 'ptr')
         g_user32_SetParent := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetParent', 'ptr')
         g_user32_SetThreadDpiAwarenessContext := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'SetThreadDpiAwarenessContext', 'ptr')
