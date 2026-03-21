@@ -462,7 +462,7 @@ Window32ChildFromPointEx(win, X, Y, Flag := 0) {
     return DllCall(g_user32_ChildWindowFromPointEx, 'ptr', IsObject(win) ? win.Hwnd : win, 'int', (X & 0xFFFFFFFF) | (Y << 32), 'int', Flag, 'ptr')
 }
 Window32EnumChildWindows(win, Callback, lParam := 0) {
-    cb := CallbackCreate(Callback, 'fast', 1)
+    cb := CallbackCreate(Callback, , 1)
     result := DllCall(g_user32_EnumChildWindows, 'ptr', IsObject(win) ? win.Hwnd : win, 'ptr', cb, 'ptr', lParam, 'int')
     CallbackFree(cb)
     return result

@@ -636,7 +636,7 @@ class Window32 {
     Close() => WinClose(this.Hwnd)
     EnumChildWindows(Callback, lParam := 0) {
         if IsObject(callback) {
-            cb := CallbackCreate(Callback, 'fast',  1)
+            cb := CallbackCreate(Callback, ,  1)
             result := DllCall(g_user32_EnumChildWindows, 'ptr', this.Hwnd, 'ptr', cb, 'ptr', lParam, 'int')
             CallbackFree(cb)
             return result
