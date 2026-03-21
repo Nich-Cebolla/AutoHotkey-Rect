@@ -40,6 +40,42 @@ class Point {
         }
     }
     /**
+     * @desc - Does the following:
+     * - Calls {@link https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos GetCursorPos},
+     *   updating this object's values.
+     * - Adds `delta` to {@link Point#x}.
+     * - Calls {@link https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursorpos SetCursorPos}
+     *   to move the mouse pointer.
+     *
+     * @param {Integer} delta - The number of pixels to add to the cursor's position along the
+     * x axis.
+     */
+    BumpCursorX(delta) {
+        DllCall(g_user32_GetCursorPos, 'ptr', this, 'int')
+        this.x += delta
+        if !DllCall(g_user32_SetCursorPos, 'int', this.x, 'int', this.y, 'int') {
+            throw OSError()
+        }
+    }
+    /**
+     * @desc - Does the following:
+     * - Calls {@link https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos GetCursorPos},
+     *   updating this object's values.
+     * - Adds `delta` to {@link Point#y}.
+     * - Calls {@link https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursorpos SetCursorPos}
+     *   to move the mouse pointer.
+     *
+     * @param {Integer} delta - The number of pixels to add to the cursor's position along the
+     * y axis.
+     */
+    BumpCursorY(delta) {
+        DllCall(g_user32_GetCursorPos, 'ptr', this, 'int')
+        this.y += delta
+        if !DllCall(g_user32_SetCursorPos, 'int', this.x, 'int', this.y, 'int') {
+            throw OSError()
+        }
+    }
+    /**
      * @description - Use this to convert client coordinates (which should already be contained by
      * this {@link Point} object), to screen coordinates.
      * {@link https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clienttoscreen}.
