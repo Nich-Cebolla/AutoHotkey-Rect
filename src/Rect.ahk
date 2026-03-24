@@ -1283,6 +1283,5 @@ Rect_SetConstants(force := false) {
         g_user32_WindowFromPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'WindowFromPoint', 'ptr')
     }
 
-
     Rect_constants_set := true
 }
