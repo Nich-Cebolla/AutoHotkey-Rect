@@ -440,6 +440,88 @@ class Rect {
             this.B := this.T + H
         }
     }
+    /**
+     * @desc - Calculates the required size of the window rectangle, based on the desired size of
+     * the client rectangle and the provided DPI. This method behaves similarly to
+     * {@link https://www.autohotkey.com/docs/v2/lib/Gui.htm#Show Gui.Prototype.Show}, except
+     * internally `Gui.Prototype.Show` fails to use the correct dpi when the window is on a monitor
+     * with a different dpi than the system dpi. This method applies the correct dpi.
+     *
+     * This method corrects the dpi scaling issue inherent to `Gui.Prototype.Show`.
+     *
+     * To use this method, create a {@link Rect} object with the desired client area of the window.
+     * Then call the method with the `hwnd` for the window. If you only need to resize the window and
+     * not move it, you can make the {@link Rect} object with `Rect(0, 0, width, height)` to keep
+     * it simple, but if you do this you must ensure you use the SWP_NOMOVE flag.
+     *
+     * If you only need to change one dimension, i.e. only need to change the window's height,
+     * create a {@link WinRect} object passing `1` to the `Flags` parameter of
+     * {@link WinRect.Prototype.__New}, then update the dimension to the needed value, then call
+     * {@link WinRect.Prototype.SetClientRect}.
+     *
+     * @param {Integer} hwnd - The handle to the window.
+     *
+     * @param {Integer} [dpi] - If set, the dpi to pass to
+     * {@link https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectexfordpi AdjustWindowRectExForDpi}.
+     * If unset, the window's current dpi is used.
+     *
+     * @param {Integer} [hwndInsertAfter = 0] - A handle to the window to precede the positioned
+     * window in the Z order. This parameter must be a window handle or one of the following values.
+     *
+     * |  Name            |  Value  |  Description                                                                                                                                                                               |
+     * |  ----------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  |
+     * |  HWND_BOTTOM     |  1      |  Places the window at the bottom of the Z order. If the hWnd parameter identifies a topmost window, the window loses its topmost status and is placed at the bottom of all other windows.  |
+     * |  HWND_NOTOPMOST  |  -2     |  Places the window above all non-topmost windows (that is, behind all topmost windows). This flag has no effect if the window is already a non-topmost window.                             |
+     * |  HWND_TOP        |  0      |  Places the window at the top of the Z order.                                                                                                                                              |
+     * |  HWND_TOPMOST    |  -1     |  Places the window above all non-topmost windows. The window maintains its topmost position even when it is deactivated.                                                                   |
+     *
+     * @param {Integer} [flags = 0] - Zero or more of the following options. To combine multiple options,
+     * use the bitwise "or" ( | ), e.g. `0x0002 | 0x0010 | 0x0004`.
+     *
+     * Common options used are:
+     * - SWP_NOACTIVATE to avoid activating the window.
+     * - SWP_NOZORDER and SWP_NOOWNERZORDER to avoid changing the Z-order.
+     * - SWP_NOMOVE and/or SWP_NOSIZE to avoid moving / sizing the window.
+     * - SWP_SHOWWINDOW or SWP_HIDEWINDOW to show / hide the window.
+     *
+     * |  Name                |  Value   |  Description                                                                                                                                                                                                                                                                                                                                                                                                   |
+     * |  --------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  |
+     * |  SWP_DRAWFRAME       |  0x0020  |  Draws a frame (defined in the window's class description) around the window.                                                                                                                                                                                                                                                                                                                                  |
+     * |  SWP_FRAMECHANGED    |  0x0020  |  Sends a WM_NCCALCSIZE message to the window, even if the window's size is not being changed. If this flag is not specified, WM_NCCALCSIZE is sent only when the window's size is being changed.                                                                                                                                                                                                               |
+     * |  SWP_HIDEWINDOW      |  0x0080  |  Hides the window.                                                                                                                                                                                                                                                                                                                                                                                             |
+     * |  SWP_NOACTIVATE      |  0x0010  |  Does not activate the window. If this flag is not set, the window is activated and moved to the top of either the topmost or non-topmost group (depending on the setting of the hWndInsertAfter parameter).                                                                                                                                                                                                   |
+     * |  SWP_NOCOPYBITS      |  0x0100  |  Discards the entire contents of the client area. If this flag is not specified, the valid contents of the client area are saved and copied back into the client area after the window is sized or repositioned.                                                                                                                                                                                               |
+     * |  SWP_NOMOVE          |  0x0002  |  Retains the current position (ignores the x and y parameters).                                                                                                                                                                                                                                                                                                                                                |
+     * |  SWP_NOOWNERZORDER   |  0x0200  |  Does not change the owner window's position in the Z order.                                                                                                                                                                                                                                                                                                                                                   |
+     * |  SWP_NOREDRAW        |  0x0008  |  Does not redraw changes. If this flag is set, no repainting of any kind occurs. This applies to the client area, the nonclient area (including the title bar and scroll bars), and any part of the parent window uncovered as a result of the window being moved. When this flag is set, the application must explicitly invalidate or redraw any parts of the window and parent window that need redrawing.  |
+     * |  SWP_NOREPOSITION    |  0x0200  |  Same as the SWP_NOOWNERZORDER flag.                                                                                                                                                                                                                                                                                                                                                                           |
+     * |  SWP_NOSENDCHANGING  |  0x0400  |  Prevents the window from receiving the WM_WINDOWPOSCHANGING message.                                                                                                                                                                                                                                                                                                                                          |
+     * |  SWP_NOSIZE          |  0x0001  |  Retains the current size (ignores the cx and cy parameters).                                                                                                                                                                                                                                                                                                                                                  |
+     * |  SWP_NOZORDER        |  0x0004  |  Retains the current Z order (ignores the hWndInsertAfter parameter).                                                                                                                                                                                                                                                                                                                                          |
+     * |  SWP_SHOWWINDOW      |  0x0040  |  Displays the window.                                                                                                                                                                                                                                                                                                                                                                                          |
+     *
+     * @returns {Boolean} - Returns the value returned by
+     * {@link https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos SetWindowPos}.
+     * If successful, returns nonzero. If unsuccessful, returns zero.
+     */
+    SetClientRect(hwnd, dpi?, hwndInsertAfter := 0, flags := 0) {
+        win := Window32(hwnd)
+        win()
+        if !DllCall(g_user32_AdjustWindowRectExForDpi, 'ptr', this, 'uint', win.Style, 'int', win.Menu ? 1 : 0, 'uint', win.ExStyle, 'uint', dpi ?? win.dpi, 'int') {
+            throw OSError()
+        }
+        return DllCall(
+            g_user32_SetWindowPos,
+            'ptr', hwnd,
+            'ptr', hwndInsertAfter,
+            'int', this.l,
+            'int', this.t,
+            'int', this.w,
+            'int', this.h,
+            'uint', flags,
+            'int'
+        )
+    }
     Subtract(rc) {
         out := Rect()
         DllCall(g_user32_SubtractRect, 'ptr', out, 'ptr', this, 'ptr', rc, 'int')
@@ -978,6 +1060,89 @@ class WinRect extends Rect {
         if !DllCall(g_user32_SetWindowPos, 'ptr', this.Hwnd, 'ptr', InsertAfter, 'int', this.L, 'int', this.T, 'int', this.W, 'int', this.H, 'uint', Flags, 'int') {
             throw OSError()
         }
+    }
+    /**
+     * @desc - Calculates the required size of the window rectangle, based on the desired size of
+     * the client rectangle and the provided DPI. This method behaves similarly to
+     * {@link https://www.autohotkey.com/docs/v2/lib/Gui.htm#Show Gui.Prototype.Show}, except
+     * internally `Gui.Prototype.Show` fails to use the correct dpi when the window is on a monitor
+     * with a different dpi than the system dpi. This method applies the correct dpi.
+     *
+     * This method corrects the dpi scaling issue inherent to `Gui.Prototype.Show`.
+     *
+     * To use this method, create a {@link Rect} object with the desired client area of the window.
+     * Then call the method with the `hwnd` for the window. If you only need to resize the window and
+     * not move it, you can make the {@link Rect} object with `Rect(0, 0, width, height)` to keep
+     * it simple, but if you do this you must ensure you use the SWP_NOMOVE flag.
+     *
+     * If you only need to change one dimension, i.e. only need to change the window's height,
+     * create a {@link WinRect} object passing `1` to the `Flags` parameter of
+     * {@link WinRect.Prototype.__New}, then update the dimension to the needed value, then call
+     * {@link WinRect.Prototype.SetClientRect}.
+     *
+     * @param {Integer} [hwnd = this.hwnd] - The handle to the window. If unset, {@link WinRect#hwnd}
+     * is used.
+     *
+     * @param {Integer} [dpi] - If set, the dpi to pass to
+     * {@link https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectexfordpi AdjustWindowRectExForDpi}.
+     * If unset, the window's current dpi is used.
+     *
+     * @param {Integer} [hwndInsertAfter = 0] - A handle to the window to precede the positioned
+     * window in the Z order. This parameter must be a window handle or one of the following values.
+     *
+     * |  Name            |  Value  |  Description                                                                                                                                                                               |
+     * |  ----------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  |
+     * |  HWND_BOTTOM     |  1      |  Places the window at the bottom of the Z order. If the hWnd parameter identifies a topmost window, the window loses its topmost status and is placed at the bottom of all other windows.  |
+     * |  HWND_NOTOPMOST  |  -2     |  Places the window above all non-topmost windows (that is, behind all topmost windows). This flag has no effect if the window is already a non-topmost window.                             |
+     * |  HWND_TOP        |  0      |  Places the window at the top of the Z order.                                                                                                                                              |
+     * |  HWND_TOPMOST    |  -1     |  Places the window above all non-topmost windows. The window maintains its topmost position even when it is deactivated.                                                                   |
+     *
+     * @param {Integer} [flags = 0] - Zero or more of the following options. To combine multiple options,
+     * use the bitwise "or" ( | ), e.g. `0x0002 | 0x0010 | 0x0004`.
+     *
+     * Common options used are:
+     * - SWP_NOACTIVATE to avoid activating the window.
+     * - SWP_NOZORDER and SWP_NOOWNERZORDER to avoid changing the Z-order.
+     * - SWP_NOMOVE and/or SWP_NOSIZE to avoid moving / sizing the window.
+     * - SWP_SHOWWINDOW or SWP_HIDEWINDOW to show / hide the window.
+     *
+     * |  Name                |  Value   |  Description                                                                                                                                                                                                                                                                                                                                                                                                   |
+     * |  --------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  |
+     * |  SWP_DRAWFRAME       |  0x0020  |  Draws a frame (defined in the window's class description) around the window.                                                                                                                                                                                                                                                                                                                                  |
+     * |  SWP_FRAMECHANGED    |  0x0020  |  Sends a WM_NCCALCSIZE message to the window, even if the window's size is not being changed. If this flag is not specified, WM_NCCALCSIZE is sent only when the window's size is being changed.                                                                                                                                                                                                               |
+     * |  SWP_HIDEWINDOW      |  0x0080  |  Hides the window.                                                                                                                                                                                                                                                                                                                                                                                             |
+     * |  SWP_NOACTIVATE      |  0x0010  |  Does not activate the window. If this flag is not set, the window is activated and moved to the top of either the topmost or non-topmost group (depending on the setting of the hWndInsertAfter parameter).                                                                                                                                                                                                   |
+     * |  SWP_NOCOPYBITS      |  0x0100  |  Discards the entire contents of the client area. If this flag is not specified, the valid contents of the client area are saved and copied back into the client area after the window is sized or repositioned.                                                                                                                                                                                               |
+     * |  SWP_NOMOVE          |  0x0002  |  Retains the current position (ignores the x and y parameters).                                                                                                                                                                                                                                                                                                                                                |
+     * |  SWP_NOOWNERZORDER   |  0x0200  |  Does not change the owner window's position in the Z order.                                                                                                                                                                                                                                                                                                                                                   |
+     * |  SWP_NOREDRAW        |  0x0008  |  Does not redraw changes. If this flag is set, no repainting of any kind occurs. This applies to the client area, the nonclient area (including the title bar and scroll bars), and any part of the parent window uncovered as a result of the window being moved. When this flag is set, the application must explicitly invalidate or redraw any parts of the window and parent window that need redrawing.  |
+     * |  SWP_NOREPOSITION    |  0x0200  |  Same as the SWP_NOOWNERZORDER flag.                                                                                                                                                                                                                                                                                                                                                                           |
+     * |  SWP_NOSENDCHANGING  |  0x0400  |  Prevents the window from receiving the WM_WINDOWPOSCHANGING message.                                                                                                                                                                                                                                                                                                                                          |
+     * |  SWP_NOSIZE          |  0x0001  |  Retains the current size (ignores the cx and cy parameters).                                                                                                                                                                                                                                                                                                                                                  |
+     * |  SWP_NOZORDER        |  0x0004  |  Retains the current Z order (ignores the hWndInsertAfter parameter).                                                                                                                                                                                                                                                                                                                                          |
+     * |  SWP_SHOWWINDOW      |  0x0040  |  Displays the window.                                                                                                                                                                                                                                                                                                                                                                                          |
+     *
+     * @returns {Boolean} - Returns the value returned by
+     * {@link https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos SetWindowPos}.
+     * If successful, returns nonzero. If unsuccessful, returns zero.
+     */
+    SetClientRect(hwnd := this.hwnd, dpi?, hwndInsertAfter := 0, flags := 0) {
+        win := Window32(hwnd)
+        win()
+        if !DllCall(g_user32_AdjustWindowRectExForDpi, 'ptr', this, 'uint', win.Style, 'int', win.Menu ? 1 : 0, 'uint', win.ExStyle, 'uint', dpi ?? win.dpi, 'int') {
+            throw OSError()
+        }
+        return DllCall(
+            g_user32_SetWindowPos,
+            'ptr', hwnd,
+            'ptr', hwndInsertAfter,
+            'int', this.l,
+            'int', this.t,
+            'int', this.w,
+            'int', this.h,
+            'uint', flags,
+            'int'
+        )
     }
 }
 
