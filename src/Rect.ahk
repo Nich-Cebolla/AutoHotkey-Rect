@@ -620,6 +620,7 @@ class Window32 {
         if !DllCall(g_user32_AdjustWindowRectEx, 'ptr', rc, 'uint', this.Style, 'int', this.Menu ? 1 : 0, 'uint', this.ExStyle, 'int') {
             throw OSError()
         }
+        return rc
     }
     BringToTop() => DllCall(g_user32_BringWindowToTop, 'ptr', this.Hwnd, 'int')
     Call(*) {
