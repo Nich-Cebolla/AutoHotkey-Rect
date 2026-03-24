@@ -444,10 +444,16 @@ class Rect {
      * @desc - Calculates the required size of the window rectangle, based on the desired size of
      * the client rectangle and the provided DPI. This method behaves similarly to
      * {@link https://www.autohotkey.com/docs/v2/lib/Gui.htm#Show Gui.Prototype.Show}, except
-     * internally `Gui.Prototype.Show` fails to use the correct dpi when the window is on a monitor
-     * with a different dpi than the system dpi. This method applies the correct dpi.
+     * internally `Gui.Prototype.Show` fails to produce the correct measurements when the window's
+     * dpi awareness context is DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2.
      *
-     * This method corrects the dpi scaling issue inherent to `Gui.Prototype.Show`.
+     * If you set the thread dpi awareness context to -4 (DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2)
+     * before creating the gui window, then `Gui.Prototype.Show` will produce **incorrect** results
+     * when the window is on a monitor with a dpi other than 96.
+     *
+     * If you set the thread dpi awareness context to -3 (DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE)
+     * before creating the gui window, then `Gui.Prototype.Show` will produce **correct** results
+     * regardless of the monitor's dpi.
      *
      * To use this method, create a {@link Rect} object with the desired client area of the window.
      * Then call the method with the `hwnd` for the window. If you only need to resize the window and
@@ -1065,10 +1071,16 @@ class WinRect extends Rect {
      * @desc - Calculates the required size of the window rectangle, based on the desired size of
      * the client rectangle and the provided DPI. This method behaves similarly to
      * {@link https://www.autohotkey.com/docs/v2/lib/Gui.htm#Show Gui.Prototype.Show}, except
-     * internally `Gui.Prototype.Show` fails to use the correct dpi when the window is on a monitor
-     * with a different dpi than the system dpi. This method applies the correct dpi.
+     * internally `Gui.Prototype.Show` fails to produce the correct measurements when the window's
+     * dpi awareness context is DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2.
      *
-     * This method corrects the dpi scaling issue inherent to `Gui.Prototype.Show`.
+     * If you set the thread dpi awareness context to -4 (DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2)
+     * before creating the gui window, then `Gui.Prototype.Show` will produce **incorrect** results
+     * when the window is on a monitor with a dpi other than 96.
+     *
+     * If you set the thread dpi awareness context to -3 (DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE)
+     * before creating the gui window, then `Gui.Prototype.Show` will produce **correct** results
+     * regardless of the monitor's dpi.
      *
      * To use this method, create a {@link Rect} object with the desired client area of the window.
      * Then call the method with the `hwnd` for the window. If you only need to resize the window and
