@@ -622,6 +622,19 @@ class Window32 {
         }
         return rc
     }
+    AdjustRectExForDpi(X?, Y?, W?, H?, dpi := this.dpi) {
+        this()
+        rc := Rect.FromDimensions(
+            X ?? NumGet(this, 4, 'int'),
+            Y ?? NumGet(this, 8, 'int'),
+            W ?? NumGet(this, 12, 'int') - NumGet(this, 4, 'int'),
+            H ?? NumGet(this, 16, 'int') - NumGet(this, 8, 'int')
+        )
+        if !DllCall(g_user32_AdjustWindowRectExForDpi, 'ptr', rc, 'uint', this.Style, 'int', this.Menu ? 1 : 0, 'uint', this.ExStyle, 'uint', dpi, 'int') {
+            throw OSError()
+        }
+        return rc
+    }
     BringToTop() => DllCall(g_user32_BringWindowToTop, 'ptr', this.Hwnd, 'int')
     Call(*) {
         if !DllCall(g_user32_GetWindowInfo, 'ptr', this.Hwnd, 'ptr', this, 'int') {
@@ -1001,6 +1014,9 @@ Rect_SetConstants(force := false) {
         if !IsSet(g_user32_AdjustWindowRectEx) {
             g_user32_AdjustWindowRectEx := 0
         }
+        if !IsSet(g_user32_AdjustWindowRectExForDpi) {
+            g_user32_AdjustWindowRectExForDpi := 0
+        }
         if !IsSet(g_user32_BringWindowToTop) {
             g_user32_BringWindowToTop := 0
         }
@@ -1158,6 +1174,7 @@ Rect_SetConstants(force := false) {
             ],
             'user32', [
                 'AdjustWindowRectEx',
+                'AdjustWindowRectExForDpi',
                 'BringWindowToTop',
                 'ChildWindowFromPoint',
                 'ChildWindowFromPointEx',
@@ -1216,6 +1233,7 @@ Rect_SetConstants(force := false) {
         g_shcore_GetDpiForMonitor := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'GetDpiForMonitor', 'ptr')
         hmod := DllCall('GetModuleHandle', 'str', 'User32', 'ptr')
         g_user32_AdjustWindowRectEx := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'AdjustWindowRectEx', 'ptr')
+        g_user32_AdjustWindowRectExForDpi := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'AdjustWindowRectExForDpi', 'ptr')
         g_user32_BringWindowToTop := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'BringWindowToTop', 'ptr')
         g_user32_ChildWindowFromPoint := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'ChildWindowFromPoint', 'ptr')
         g_user32_ChildWindowFromPointEx := DllCall('GetProcAddress', 'ptr', hmod, 'astr', 'ChildWindowFromPointEx', 'ptr')
